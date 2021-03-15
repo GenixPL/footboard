@@ -2,6 +2,7 @@ import 'package:footboard/data_providers/connectivity_data_provider.dart';
 import 'package:footboard/data_providers/game_data_provider.dart';
 import 'package:footboard/repositories/connectivity_repository.dart';
 import 'package:footboard/repositories/game_repository.dart';
+import 'package:footboard/screens/home/cubit/cubit.dart';
 import 'package:footboard/utils/path/pather.dart';
 import 'package:get_it/get_it.dart';
 
@@ -23,5 +24,6 @@ void setupSl() {
   // endregion
 
   // region Cubits
+  sl.registerFactory(() => HomeScreenCubit());
   // endregion
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'screens/home_screen.dart';
-import 'utils/service_locator.dart';
+import 'package:footboard/screens/home/home_screen.dart';
+import 'package:footboard/utils/service_locator.dart';
 
 void main() {
   setupSl();
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: MyHomePage(),
+      home: HomeScreen(),
     );
   }
 }

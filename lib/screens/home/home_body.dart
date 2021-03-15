@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:footboard/screens/host/host_screen.dart';
+import 'package:footboard/utils/path/pather.dart';
+import 'package:footboard/utils/service_locator.dart';
+import 'package:footboard/widgets/regular_button/regular_button.dart';
 import 'package:footboard/widgets/single_scroll_view/single_scroll_view.dart';
 
 class HomeBody extends StatelessWidget {
@@ -10,13 +14,22 @@ class HomeBody extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: const <Widget>[
-          Text(
+        children: <Widget>[
+          const Text(
             'footboard',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20.0,
             ),
+          ),
+          const SizedBox(height: 20.0),
+          RegularButton(
+            text: 'HOST',
+            onTap: () => sl<Pather>().push(HostScreen.route()),
+          ),
+          RegularButton(
+            text: 'CONNECT',
+            onTap: () => print('connect'),
           ),
         ],
       ),

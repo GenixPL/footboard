@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:footboard/screens/home/home_screen.dart';
+import 'package:footboard/utils/path/pather.dart';
 import 'package:footboard/utils/service_locator.dart';
 
 void main() {
@@ -13,8 +15,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeScreen(),
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.grey.shade900,
+    ));
+
+    return MaterialApp(
+      navigatorKey: sl<Pather>().navigatorKey,
+      theme: ThemeData(
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        brightness: Brightness.dark,
+        primaryColor: Colors.grey.shade900,
+      ),
+      home: const HomeScreen(),
     );
   }
 }

@@ -24,7 +24,6 @@ class GameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('build');
     return Scaffold(
       appBar: AppBar(
         title: const Text('GAME'),
@@ -39,7 +38,7 @@ class GameScreen extends StatelessWidget {
               } else if (state is GameScreenLoadedState) {
                 return GameBody(
                   connectivityStatus: state.connectivityStatus,
-                  isHost: false,
+                  game: state.game,
                 );
               }
 

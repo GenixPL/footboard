@@ -20,7 +20,7 @@ class GameScreenLoadedState extends GameScreenState {
   });
 
   final ConnectivityStatus connectivityStatus;
-  final Game? game;
+  final Game game;
 
   @override
   List<Object?> get props => <dynamic>[

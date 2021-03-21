@@ -35,12 +35,16 @@ class GameScreenCubit extends Cubit<GameScreenState> {
     _subscription = CombineLatestStream.combine2(
       _gameRepository.connectivityStatus,
       _gameRepository.gameStream,
-      (ConnectivityStatus connectivityStatus, Game? game) {
+      (ConnectivityStatus connectivityStatus, Game game) {
         emit(GameScreenLoadedState(
           connectivityStatus: connectivityStatus,
           game: game,
         ));
       },
     ).listen((_) {});
+  }
+
+  Future<void> occupyPlace(int place) async {
+    await _gameRepository.occupyPlace(place);
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:footboard/models/connectivity_status.dart';
 import 'package:footboard/models/game/game.dart';
 import 'package:http/http.dart' as http;
@@ -10,8 +11,14 @@ const String _getGamesUrl = 'http://localhost:8080/games';
 const String _createGameUrl = 'http://localhost:8080/create-new-game';
 const String _connectToGameUrl = 'ws://localhost:8080/connect/';
 
+class Errors {
+  const Errors._();
+
+  static const String noActiveConnection = 'no_active_connection';
+}
+
 class GameDataProvider {
-  final BehaviorSubject<Game?> _game$ = BehaviorSubject<Game?>.seeded(null);
+  final BehaviorSubject<Game> _game$ = BehaviorSubject<Game>();
   final BehaviorSubject<ConnectivityStatus> _connectivityStatus$ =
       BehaviorSubject<ConnectivityStatus>.seeded(ConnectivityStatus.disconnected);
 
@@ -21,7 +28,7 @@ class GameDataProvider {
     return _connectivityStatus$.stream;
   }
 
-  Stream<Game?> get gameStream {
+  Stream<Game> get gameStream {
     return _game$.stream;
   }
 
@@ -68,12 +75,12 @@ class GameDataProvider {
 
     final String response = await stream.first;
     final Map<String, dynamic> responseMap = jsonDecode(response);
-    if (responseMap["error"] != null) {
+    if (responseMap['error'] != null) {
       await _clearChannel();
       return false;
     }
 
-    _onMessage(jsonEncode(responseMap["newGame"]));
+    _onMessage(jsonEncode(responseMap));
 
     stream.listen(
       _onMessage,
@@ -85,12 +92,18 @@ class GameDataProvider {
   }
 
   Future<bool> disconnect() async {
-    if (_connectivityStatus$.value == ConnectivityStatus.disconnected || _channel == null) {
-      return true;
-    }
-
     await _clearChannel();
     return true;
+  }
+
+  Future<void> sendMsg(Map<String, dynamic> msgMap) async {
+    if (_channel == null) {
+      return;
+    }
+
+    print('Sending message: $msgMap');
+
+    _channel!.sink.add(jsonEncode(msgMap));
   }
 
   // PRIVATE
@@ -98,9 +111,16 @@ class GameDataProvider {
   void _onMessage(dynamic message) {
     print('=== NEW MESSAGE ===');
 
+    final Map<String, dynamic> responseMap = jsonDecode(message);
+
+    if (responseMap['error'] != null) {
+      Fluttertoast.showToast(msg: 'Error: ${responseMap['error']}');
+      return;
+    }
+
     Game game;
     try {
-      game = Game.fromJson(jsonDecode(message));
+      game = Game.fromJson(responseMap['game']);
     } catch (e) {
       print("Couldn't parse message, error: $e");
       return;

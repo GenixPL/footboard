@@ -23,7 +23,7 @@ class GamesScreenCubit extends Cubit<GamesScreenState> {
   }
 
   Future<void> connectToGame(String gameId) async {
-    await _gameRepository.connectToGame(gameId);
+    _pather.push(GameScreen.route(gameId));
   }
 
   Future<void> createNewGame() async {

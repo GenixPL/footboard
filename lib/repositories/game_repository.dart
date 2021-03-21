@@ -3,10 +3,16 @@ import 'package:footboard/models/connectivity_status.dart';
 import 'package:footboard/models/game/game.dart';
 import 'package:footboard/utils/service_locator.dart';
 
+class Commands {
+  const Commands._();
+
+  static const String occupyPlace = 'occupy_place';
+}
+
 class GameRepository {
   final GameDataProvider _gameDataProvider = sl();
 
-  Stream<Game?> get gameStream {
+  Stream<Game> get gameStream {
     return _gameDataProvider.gameStream;
   }
 
@@ -24,5 +30,13 @@ class GameRepository {
 
   Future<bool> connectToGame(String gameId) {
     return _gameDataProvider.connectToGame(gameId);
+  }
+
+  // Possible place values: 1, 2
+  Future<void> occupyPlace(int place) async {
+    return _gameDataProvider.sendMsg(<String, dynamic>{
+      'command': Commands.occupyPlace,
+      'val': place,
+    });
   }
 }

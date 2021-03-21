@@ -42,6 +42,6 @@ class GamesScreenCubit extends Cubit<GamesScreenState> {
       games: games,
     ));
 
-    // _pather.push(GameScreen.route(newGame.id));
+    _pather.push(GameScreen.route(newGame.id));
   }
 }

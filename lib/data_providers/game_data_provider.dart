@@ -64,16 +64,18 @@ class GameDataProvider {
 
     _channel = IOWebSocketChannel.connect(_connectToGameUrl + gameId);
 
-    final String response = await _channel!.stream.first;
+    final Stream<dynamic> stream = _channel!.stream.asBroadcastStream();
+
+    final String response = await stream.first;
     final Map<String, dynamic> responseMap = jsonDecode(response);
     if (responseMap["error"] != null) {
       await _clearChannel();
       return false;
     }
 
-    _onMessage(responseMap["newGame"]);
+    _onMessage(jsonEncode(responseMap["newGame"]));
 
-    _channel!.stream.listen(
+    stream.listen(
       _onMessage,
       onError: _onError,
       onDone: _onDone,

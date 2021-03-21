@@ -18,6 +18,10 @@ class GameRepository {
     return _gameDataProvider.fetchAvailableGames();
   }
 
+  Future<Game?> createNewGame() {
+    return _gameDataProvider.createNewGame();
+  }
+
   Future<bool> connectToGame(String gameId) {
     return _gameDataProvider.connectToGame(gameId);
   }

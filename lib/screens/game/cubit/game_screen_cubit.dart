@@ -23,7 +23,15 @@ class GameScreenCubit extends Cubit<GameScreenState> {
   }
 
   // Do all the stuff that needs to be initialized before the app can work.
-  Future<void> init() async {
+  Future<void> init(String gameId) async {
+    final bool success = await _gameRepository.connectToGame(gameId);
+    if (!success) {
+      emit(const GameScreenErrorState(
+        errorTitle: "Couldn't connect!",
+      ));
+      return;
+    }
+
     _subscription = CombineLatestStream.combine2(
       _gameRepository.connectivityStatus,
       _gameRepository.gameStream,

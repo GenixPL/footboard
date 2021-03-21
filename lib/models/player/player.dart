@@ -6,7 +6,7 @@ part 'player.g.dart';
 class Player {
   const Player({
     required this.id,
-    required this.secondLeft,
+    required this.secondsLeft,
   });
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
@@ -15,5 +15,5 @@ class Player {
 
   final String id;
 
-  final int secondLeft;
+  final int secondsLeft;
 }

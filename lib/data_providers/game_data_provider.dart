@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:web_socket_channel/io.dart';
 
 const String _getGamesUrl = 'http://localhost:8080/games';
+const String _createGameUrl = 'http://localhost:8080/create-new-game';
 const String _connectToGameUrl = 'ws://localhost:8080/connect/';
 
 class GameDataProvider {
@@ -43,12 +44,35 @@ class GameDataProvider {
     return games;
   }
 
+  Future<Game?> createNewGame() async {
+    print('Creating new game...');
+
+    final http.Response response = await http.get(Uri.parse(_createGameUrl));
+
+    try {
+      return Game.fromJson(jsonDecode(response.body));
+    } catch (e) {
+      print("Couldn't parse response, error: $e");
+      return null;
+    }
+  }
+
   Future<bool> connectToGame(String gameId) async {
     if (_channel != null) {
       await disconnect();
     }
 
     _channel = IOWebSocketChannel.connect(_connectToGameUrl + gameId);
+
+    final String response = await _channel!.stream.first;
+    final Map<String, dynamic> responseMap = jsonDecode(response);
+    if (responseMap["error"] != null) {
+      await _clearChannel();
+      return false;
+    }
+
+    _onMessage(responseMap["newGame"]);
+
     _channel!.stream.listen(
       _onMessage,
       onError: _onError,
@@ -98,7 +122,7 @@ class GameDataProvider {
   }
 
   Future<void> _clearChannel() async {
-    await _channel!.sink.close();
+    await _channel?.sink.close();
     _channel = null;
     _connectivityStatus$.add(ConnectivityStatus.disconnected);
   }

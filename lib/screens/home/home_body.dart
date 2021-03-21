@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:footboard/screens/host/host_screen.dart';
+import 'package:footboard/screens/games/games_screen.dart';
 import 'package:footboard/utils/path/pather.dart';
 import 'package:footboard/utils/service_locator.dart';
 import 'package:footboard/widgets/regular_button/regular_button.dart';
@@ -24,12 +24,8 @@ class HomeBody extends StatelessWidget {
           ),
           const SizedBox(height: 20.0),
           RegularButton(
-            text: 'HOST',
-            onTap: () => sl<Pather>().push(HostScreen.route()),
-          ),
-          RegularButton(
-            text: 'CONNECT',
-            onTap: () => print('connect'),
+            text: 'GAMES',
+            onTap: () => sl<Pather>().push(GamesScreen.route()),
           ),
         ],
       ),

@@ -37,7 +37,7 @@ class GameScreen extends StatelessWidget {
               } else if (state is GameScreenLoadedState) {
                 return GameBody(
                   connectivityStatus: state.connectivityStatus,
-                  isHost: state.isHost,
+                  isHost: false,
                 );
               }
 

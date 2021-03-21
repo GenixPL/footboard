@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:footboard/models/connectivity_status.dart';
+import 'package:footboard/models/game/game.dart';
 
 abstract class GameScreenState extends Equatable {
   const GameScreenState();
@@ -15,16 +16,16 @@ class GameScreenLoadingState extends GameScreenState {
 class GameScreenLoadedState extends GameScreenState {
   const GameScreenLoadedState({
     required this.connectivityStatus,
-    required this.isHost,
+    required this.game,
   });
 
   final ConnectivityStatus connectivityStatus;
-  final bool isHost;
+  final Game? game;
 
   @override
   List<Object?> get props => <dynamic>[
         connectivityStatus,
-        isHost,
+        game,
       ];
 }
 

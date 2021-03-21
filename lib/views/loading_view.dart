@@ -11,7 +11,7 @@ class LoadingView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: const <Widget>[
           CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           ),
         ],
       ),

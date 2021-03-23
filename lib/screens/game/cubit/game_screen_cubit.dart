@@ -19,6 +19,8 @@ class GameScreenCubit extends Cubit<GameScreenState> {
   @override
   Future<void> close() {
     _subscription?.cancel();
+    _gameRepository.disconnect();
+
     return super.close();
   }
 
@@ -32,13 +34,15 @@ class GameScreenCubit extends Cubit<GameScreenState> {
       return;
     }
 
-    _subscription = CombineLatestStream.combine2(
+    _subscription = CombineLatestStream.combine3(
       _gameRepository.connectivityStatus,
       _gameRepository.gameStream,
-      (ConnectivityStatus connectivityStatus, Game game) {
+      _gameRepository.userIdStream,
+      (ConnectivityStatus connectivityStatus, Game game, String userId) {
         emit(GameScreenLoadedState(
           connectivityStatus: connectivityStatus,
           game: game,
+          userId: userId,
         ));
       },
     ).listen((_) {});
@@ -46,5 +50,9 @@ class GameScreenCubit extends Cubit<GameScreenState> {
 
   Future<void> occupyPlace(int place) async {
     await _gameRepository.occupyPlace(place);
+  }
+
+  Future<void> start() async {
+    await _gameRepository.start();
   }
 }

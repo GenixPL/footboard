@@ -17,15 +17,18 @@ class GameScreenLoadedState extends GameScreenState {
   const GameScreenLoadedState({
     required this.connectivityStatus,
     required this.game,
+    required this.userId,
   });
 
   final ConnectivityStatus connectivityStatus;
   final Game game;
+  final String userId;
 
   @override
   List<Object?> get props => <dynamic>[
         connectivityStatus,
         game,
+        userId,
       ];
 }
 

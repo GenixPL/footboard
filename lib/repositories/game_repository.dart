@@ -7,6 +7,7 @@ class Commands {
   const Commands._();
 
   static const String occupyPlace = 'occupy_place';
+  static const String startGame = 'start_game';
 }
 
 class GameRepository {
@@ -14,6 +15,10 @@ class GameRepository {
 
   Stream<Game> get gameStream {
     return _gameDataProvider.gameStream;
+  }
+
+  Stream<String> get userIdStream {
+    return _gameDataProvider.userIdStream;
   }
 
   Stream<ConnectivityStatus> get connectivityStatus {
@@ -30,6 +35,16 @@ class GameRepository {
 
   Future<bool> connectToGame(String gameId) {
     return _gameDataProvider.connectToGame(gameId);
+  }
+
+  Future<bool> disconnect() {
+    return _gameDataProvider.disconnect();
+  }
+
+  Future<void> start() async {
+    return _gameDataProvider.sendMsg(<String, dynamic>{
+      'command': Commands.startGame,
+    });
   }
 
   // Possible place values: 1, 2

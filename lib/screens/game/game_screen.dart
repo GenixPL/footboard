@@ -39,6 +39,7 @@ class GameScreen extends StatelessWidget {
                 return GameBody(
                   connectivityStatus: state.connectivityStatus,
                   game: state.game,
+                  userId: state.userId,
                 );
               }
 

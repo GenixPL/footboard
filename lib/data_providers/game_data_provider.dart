@@ -21,6 +21,7 @@ class GameDataProvider {
   final BehaviorSubject<Game> _game$ = BehaviorSubject<Game>();
   final BehaviorSubject<ConnectivityStatus> _connectivityStatus$ =
       BehaviorSubject<ConnectivityStatus>.seeded(ConnectivityStatus.disconnected);
+  final BehaviorSubject<String> _userId$ = BehaviorSubject<String>();
 
   IOWebSocketChannel? _channel;
 
@@ -30,6 +31,10 @@ class GameDataProvider {
 
   Stream<Game> get gameStream {
     return _game$.stream;
+  }
+
+  Stream<String> get userIdStream {
+    return _userId$.stream;
   }
 
   Future<List<Game>> fetchAvailableGames() async {
@@ -69,16 +74,19 @@ class GameDataProvider {
       await disconnect();
     }
 
-    _channel = IOWebSocketChannel.connect(_connectToGameUrl + gameId);
+    final IOWebSocketChannel channel = IOWebSocketChannel.connect(_connectToGameUrl + gameId);
+    _channel = channel;
 
     final Stream<dynamic> stream = _channel!.stream.asBroadcastStream();
 
     final String response = await stream.first;
     final Map<String, dynamic> responseMap = jsonDecode(response);
     if (responseMap['error'] != null) {
-      await _clearChannel();
+      await _clearState();
       return false;
     }
+
+    _userId$.add(responseMap['your_id']);
 
     _onMessage(jsonEncode(responseMap));
 
@@ -92,7 +100,7 @@ class GameDataProvider {
   }
 
   Future<bool> disconnect() async {
-    await _clearChannel();
+    await _clearState();
     return true;
   }
 
@@ -133,17 +141,17 @@ class GameDataProvider {
     print('== ON ERROR ==');
     print(error);
 
-    _clearChannel();
+    _clearState();
   }
 
   // Executed when connection is closed.
   void _onDone() {
     print('== ON DONE ==');
 
-    _clearChannel();
+    _clearState();
   }
 
-  Future<void> _clearChannel() async {
+  Future<void> _clearState() async {
     await _channel?.sink.close();
     _channel = null;
     _connectivityStatus$.add(ConnectivityStatus.disconnected);

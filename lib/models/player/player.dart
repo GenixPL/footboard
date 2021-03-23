@@ -7,6 +7,7 @@ class Player {
   const Player({
     required this.id,
     required this.secondsLeft,
+    required this.startedGame,
   });
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
@@ -16,4 +17,6 @@ class Player {
   final String id;
 
   final int secondsLeft;
+
+  final bool startedGame;
 }

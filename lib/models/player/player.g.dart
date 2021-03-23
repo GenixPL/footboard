@@ -10,10 +10,12 @@ Player _$PlayerFromJson(Map<String, dynamic> json) {
   return Player(
     id: json['id'] as String,
     secondsLeft: json['secondsLeft'] as int,
+    startedGame: json['startedGame'] as bool,
   );
 }
 
 Map<String, dynamic> _$PlayerToJson(Player instance) => <String, dynamic>{
       'id': instance.id,
       'secondsLeft': instance.secondsLeft,
+      'startedGame': instance.startedGame,
     };

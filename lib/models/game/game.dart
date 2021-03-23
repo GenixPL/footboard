@@ -1,7 +1,7 @@
-import 'package:footboard/models/ball/ball.dart';
 import 'package:footboard/models/game_state.dart';
 import 'package:footboard/models/move/move.dart';
 import 'package:footboard/models/player/player.dart';
+import 'package:footboard/models/point/point.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'game.g.dart';
@@ -34,7 +34,7 @@ class Game {
 
   final bool movesPlayer1;
 
-  final Ball ball;
+  final Point ball;
 
   final List<Move> moves;
 

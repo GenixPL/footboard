@@ -1,19 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'ball.dart';
+part of 'point.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Ball _$BallFromJson(Map<String, dynamic> json) {
-  return Ball(
+Point _$PointFromJson(Map<String, dynamic> json) {
+  return Point(
     x: json['x'] as int,
     y: json['y'] as int,
   );
 }
 
-Map<String, dynamic> _$BallToJson(Ball instance) => <String, dynamic>{
+Map<String, dynamic> _$PointToJson(Point instance) => <String, dynamic>{
       'x': instance.x,
       'y': instance.y,
     };

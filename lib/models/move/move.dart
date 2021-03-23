@@ -1,3 +1,4 @@
+import 'package:footboard/models/point/point.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'move.g.dart';
@@ -6,10 +7,8 @@ part 'move.g.dart';
 class Move {
   const Move({
     required this.performedBy,
-    required this.sX,
-    required this.sY,
-    required this.eX,
-    required this.eY,
+    required this.sP,
+    required this.eP,
   });
 
   factory Move.fromJson(Map<String, dynamic> json) => _$MoveFromJson(json);
@@ -18,11 +17,7 @@ class Move {
 
   final String performedBy;
 
-  final int sX;
+  final Point sP;
 
-  final int sY;
-
-  final int eX;
-
-  final int eY;
+  final Point eP;
 }

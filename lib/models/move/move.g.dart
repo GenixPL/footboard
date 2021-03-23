@@ -9,17 +9,13 @@ part of 'move.dart';
 Move _$MoveFromJson(Map<String, dynamic> json) {
   return Move(
     performedBy: json['performedBy'] as String,
-    sX: json['sX'] as int,
-    sY: json['sY'] as int,
-    eX: json['eX'] as int,
-    eY: json['eY'] as int,
+    sP: Point.fromJson(json['sP'] as Map<String, dynamic>),
+    eP: Point.fromJson(json['eP'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$MoveToJson(Move instance) => <String, dynamic>{
       'performedBy': instance.performedBy,
-      'sX': instance.sX,
-      'sY': instance.sY,
-      'eX': instance.eX,
-      'eY': instance.eY,
+      'sP': instance.sP,
+      'eP': instance.eP,
     };

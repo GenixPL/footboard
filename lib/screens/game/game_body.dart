@@ -222,7 +222,7 @@ class GameBody extends StatelessWidget {
             final Move move = game.moves[i];
 
             return Text(
-              '(${move.sX}, ${move.sY}) -> (${move.eX}, ${move.eY})     ${move.performedBy.substring(0, 4)}',
+              '(${move.sP.x}, ${move.sP.y}) -> (${move.eP.x}, ${move.eP.y})     ${move.performedBy.substring(0, 4)}',
             );
           },
         ),

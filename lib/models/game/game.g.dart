@@ -19,7 +19,7 @@ Game _$GameFromJson(Map<String, dynamic> json) {
         ? null
         : Player.fromJson(json['player2'] as Map<String, dynamic>),
     movesPlayer1: json['movesPlayer1'] as bool,
-    ball: Ball.fromJson(json['ball'] as Map<String, dynamic>),
+    ball: Point.fromJson(json['ball'] as Map<String, dynamic>),
     moves: (json['moves'] as List<dynamic>)
         .map((e) => Move.fromJson(e as Map<String, dynamic>))
         .toList(),

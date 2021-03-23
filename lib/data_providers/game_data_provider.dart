@@ -86,7 +86,7 @@ class GameDataProvider {
       return false;
     }
 
-    _userId$.add(responseMap['your_id']);
+    _userId$.add(responseMap['uid']);
 
     _onMessage(jsonEncode(responseMap));
 

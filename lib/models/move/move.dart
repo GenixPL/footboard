@@ -6,10 +6,10 @@ part 'move.g.dart';
 class Move {
   const Move({
     required this.performedBy,
-    required this.sx,
-    required this.sy,
-    required this.ex,
-    required this.ey,
+    required this.sX,
+    required this.sY,
+    required this.eX,
+    required this.eY,
   });
 
   factory Move.fromJson(Map<String, dynamic> json) => _$MoveFromJson(json);
@@ -18,11 +18,11 @@ class Move {
 
   final String performedBy;
 
-  final int sx;
+  final int sX;
 
-  final int sy;
+  final int sY;
 
-  final int ex;
+  final int eX;
 
-  final int ey;
+  final int eY;
 }

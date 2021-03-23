@@ -55,4 +55,8 @@ class GameScreenCubit extends Cubit<GameScreenState> {
   Future<void> start() async {
     await _gameRepository.start();
   }
+
+  Future<void> move(int x, int y) async {
+    await _gameRepository.move(x, y);
+  }
 }

@@ -9,17 +9,17 @@ part of 'move.dart';
 Move _$MoveFromJson(Map<String, dynamic> json) {
   return Move(
     performedBy: json['performedBy'] as String,
-    sx: json['sx'] as int,
-    sy: json['sy'] as int,
-    ex: json['ex'] as int,
-    ey: json['ey'] as int,
+    sX: json['sX'] as int,
+    sY: json['sY'] as int,
+    eX: json['eX'] as int,
+    eY: json['eY'] as int,
   );
 }
 
 Map<String, dynamic> _$MoveToJson(Move instance) => <String, dynamic>{
       'performedBy': instance.performedBy,
-      'sx': instance.sx,
-      'sy': instance.sy,
-      'ex': instance.ex,
-      'ey': instance.ey,
+      'sX': instance.sX,
+      'sY': instance.sY,
+      'eX': instance.eX,
+      'eY': instance.eY,
     };

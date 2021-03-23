@@ -8,6 +8,7 @@ class Commands {
 
   static const String occupyPlace = 'occupy_place';
   static const String startGame = 'start_game';
+  static const String move = 'move';
 }
 
 class GameRepository {
@@ -44,6 +45,16 @@ class GameRepository {
   Future<void> start() async {
     return _gameDataProvider.sendMsg(<String, dynamic>{
       'command': Commands.startGame,
+    });
+  }
+
+  Future<void> move(int x, int y) async {
+    return _gameDataProvider.sendMsg(<String, dynamic>{
+      'command': Commands.move,
+      'val': <String, dynamic>{
+        'x': x,
+        'y': y,
+      },
     });
   }
 

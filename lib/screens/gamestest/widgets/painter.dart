@@ -11,8 +11,8 @@ class BoardSpecs {
     grid = min(maxWidth / boardWidth, maxHeight / boardHeight);
     width = grid * boardWidth;
     height = grid * boardHeight;
-    final horOffset = (size.width - width) / 2;
-    final vertOffset = (size.height - height) / 2;
+    horOffset = (size.width - width) / 2;
+    vertOffset = (size.height - height) / 2;
     bounds = Rect.fromLTWH(horOffset, vertOffset, width, height);
   }
 
@@ -20,6 +20,7 @@ class BoardSpecs {
   final boardWidth = 8;
   final boardHeight = 12;
   late double grid, width, height;
+  late double horOffset, vertOffset;
   late Rect bounds;
 
   /// Takes a board point, e.g. (1,2), and returns a point with
@@ -28,8 +29,11 @@ class BoardSpecs {
     return Point(move.x * grid + bounds.center.dx, move.y * grid + bounds.center.dy);
   }
 
-  Point shiftToCenter(Point point) {
-    return Point(point.x - boardWidth/2, point.y - boardHeight/2);
+  Point<int> shiftToCenter(Point<int> point) {
+    return Point<int>(
+      (point.x - boardWidth / 2).toInt(),
+      (point.y - boardHeight / 2).toInt(),
+    );
   }
 
   bool isOnBorder(Point point) {
@@ -72,14 +76,14 @@ class BoardBackground extends CustomPainter {
       ..moveTo(specs.bounds.left, specs.bounds.top + goalHeight)
       ..lineTo(specs.bounds.left + horGoalDistance, specs.bounds.top + goalHeight)
       ..lineTo(specs.bounds.left + horGoalDistance, specs.bounds.top)
-      ..lineTo(specs.bounds.left + horGoalDistance+goalWidth, specs.bounds.top)
-      ..lineTo(specs.bounds.left + horGoalDistance+goalWidth, specs.bounds.top + goalHeight)
+      ..lineTo(specs.bounds.left + horGoalDistance + goalWidth, specs.bounds.top)
+      ..lineTo(specs.bounds.left + horGoalDistance + goalWidth, specs.bounds.top + goalHeight)
       ..lineTo(specs.bounds.right, specs.bounds.top + goalHeight)
       ..lineTo(specs.bounds.right, specs.bounds.bottom - goalHeight)
-      ..lineTo(specs.bounds.right-horGoalDistance, specs.bounds.bottom - goalHeight)
-      ..lineTo(specs.bounds.right-horGoalDistance, specs.bounds.bottom )
-      ..lineTo(specs.bounds.right-horGoalDistance-goalWidth, specs.bounds.bottom )
-      ..lineTo(specs.bounds.right-horGoalDistance-goalWidth, specs.bounds.bottom - goalHeight)
+      ..lineTo(specs.bounds.right - horGoalDistance, specs.bounds.bottom - goalHeight)
+      ..lineTo(specs.bounds.right - horGoalDistance, specs.bounds.bottom)
+      ..lineTo(specs.bounds.right - horGoalDistance - goalWidth, specs.bounds.bottom)
+      ..lineTo(specs.bounds.right - horGoalDistance - goalWidth, specs.bounds.bottom - goalHeight)
       ..lineTo(specs.bounds.left, specs.bounds.bottom - goalHeight)
       ..close();
 
@@ -88,12 +92,8 @@ class BoardBackground extends CustomPainter {
     paint.style = PaintingStyle.fill;
     canvas.drawCircle(specs.bounds.center, 2, paint);
 
-    for (var i = specs.bounds.left + specs.grid;
-        i < specs.bounds.right;
-        i += specs.grid) {
-      for (var j = specs.bounds.top + 2 * specs.grid;
-          j < specs.bounds.bottom - specs.grid;
-          j += specs.grid) {
+    for (var i = specs.bounds.left + specs.grid; i < specs.bounds.right; i += specs.grid) {
+      for (var j = specs.bounds.top + 2 * specs.grid; j < specs.bounds.bottom - specs.grid; j += specs.grid) {
         canvas.drawCircle(Offset(i, j), 1, paint);
       }
     }
@@ -128,7 +128,6 @@ class BoardForeground extends CustomPainter {
 
   @override
   bool shouldRepaint(BoardForeground oldDelegate) {
-    print('${oldDelegate.moves.length} => ${moves.length}');
     return oldDelegate.moves.length != moves.length;
   }
 }

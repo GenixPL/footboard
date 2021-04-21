@@ -26,12 +26,8 @@ class HomeBody extends StatelessWidget {
           const SizedBox(height: 20.0),
           RegularButton(
             text: 'GAMES',
-            onTap: () => sl<Pather>().push(GamesScreenTest.route()),
+            onTap: () => sl<Pather>().push(GamesScreen.route()),
           ),
-          // RegularButton(
-          //   text: 'GAMES',
-          //   onTap: () => sl<Pather>().push(GamesScreen.route()),
-          // ),
         ],
       ),
     );

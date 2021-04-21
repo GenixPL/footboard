@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:footboard/models/connectivity_status.dart';
 import 'package:footboard/models/game/game.dart';
 import 'package:footboard/repositories/game_repository.dart';
-import 'package:footboard/utils/path/pather.dart';
 import 'package:footboard/utils/service_locator.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'games_screen_state.dart';
 
@@ -10,13 +13,50 @@ class GamesScreenTestCubit extends Cubit<GamesScreenState> {
   GamesScreenTestCubit() : super(const GamesScreenLoadingState());
 
   final GameRepository _gameRepository = sl();
-  final Pather _pather = sl();
 
-  Future<void> init() async {
-    // final List<Game> games = await _gameRepository.fetchAvailableGames();
+  StreamSubscription<dynamic>? _subscription;
 
-    emit(GamesScreenLoadedState(
-      games: [],
-    ));
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    _gameRepository.disconnect();
+
+    return super.close();
+  }
+
+  // Do all the stuff that needs to be initialized before the app can work.
+  Future<void> init(String gameId) async {
+    final bool success = await _gameRepository.connectToGame(gameId);
+    if (!success) {
+      emit(const GamesScreenErrorState(
+        errorTitle: "Couldn't connect!",
+      ));
+      return;
+    }
+
+    _subscription = CombineLatestStream.combine3(
+      _gameRepository.connectivityStatus,
+      _gameRepository.gameStream,
+      _gameRepository.userIdStream,
+      (ConnectivityStatus connectivityStatus, Game game, String userId) {
+        emit(GamesScreenLoadedState(
+          connectivityStatus: connectivityStatus,
+          game: game,
+          userId: userId,
+        ));
+      },
+    ).listen((_) {});
+  }
+
+  Future<void> occupyPlace(int place) async {
+    await _gameRepository.occupyPlace(place);
+  }
+
+  Future<void> start() async {
+    await _gameRepository.start();
+  }
+
+  Future<void> move(int x, int y) async {
+    await _gameRepository.move(x, y);
   }
 }

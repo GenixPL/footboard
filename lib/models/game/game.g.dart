@@ -24,6 +24,9 @@ Game _$GameFromJson(Map<String, dynamic> json) {
         .map((e) => Move.fromJson(e as Map<String, dynamic>))
         .toList(),
     gameState: _$enumDecode(_$GameStateEnumMap, json['gameState']),
+    possiblePoints: (json['possiblePoints'] as List<dynamic>)
+        .map((e) => Point.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 }
 
@@ -35,6 +38,7 @@ Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
       'movesPlayer1': instance.movesPlayer1,
       'ball': instance.ball,
       'moves': instance.moves,
+      'possiblePoints': instance.possiblePoints,
       'gameState': _$GameStateEnumMap[instance.gameState],
     };
 

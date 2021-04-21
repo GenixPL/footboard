@@ -9,14 +9,22 @@ import 'cubit/cubit.dart';
 import 'games_body.dart';
 
 class GamesScreenTest extends StatelessWidget {
-  const GamesScreenTest();
+  const GamesScreenTest({
+    required this.gameId,
+  });
+
+  final String gameId;
 
   static const String routeName = 'GamesScreenTest';
 
-  static MaterialPageRoute<Widget> route() {
+  static MaterialPageRoute<Widget> route({
+    required String gameId,
+  }) {
     return sl<PathBuilder>().defaultTransition(
       settings: const RouteSettings(name: routeName),
-      screen: const GamesScreenTest(),
+      screen: GamesScreenTest(
+        gameId: gameId,
+      ),
     );
   }
 
@@ -28,13 +36,20 @@ class GamesScreenTest extends StatelessWidget {
       ),
       body: SafeArea(
         child: BlocProvider<GamesScreenTestCubit>(
-          create: (BuildContext context) => sl()..init(),
+          create: (BuildContext context) => sl()..init(gameId),
           child: BlocBuilder<GamesScreenTestCubit, GamesScreenState>(
             builder: (BuildContext context, GamesScreenState state) {
               if (state is GamesScreenLoadingState) {
                 return const LoadingView();
               } else if (state is GamesScreenLoadedState) {
-                return GamesBody();
+                return GamesBody(
+                  game: state.game,
+                  userId: state.userId,
+                );
+              } else if (state is GamesScreenErrorState) {
+                return ErrorView(
+                  title: state.errorTitle,
+                );
               }
 
               return ErrorView(

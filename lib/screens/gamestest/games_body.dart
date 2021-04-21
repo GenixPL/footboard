@@ -1,10 +1,23 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:footboard/models/game/game.dart';
+import 'package:footboard/models/game_state.dart';
 import 'package:footboard/screens/gamestest/widgets/painter.dart';
+import 'package:footboard/widgets/regular_button/regular_button.dart';
+
+import 'cubit/games_screen_cubit.dart';
 
 class GamesBody extends StatefulWidget {
-  const GamesBody();
+  const GamesBody({
+    required this.game,
+    required this.userId,
+  });
+
+  final Game game;
+  final String userId;
 
   @override
   _GamesBodyState createState() => _GamesBodyState();
@@ -12,17 +25,36 @@ class GamesBody extends StatefulWidget {
 
 class _GamesBodyState extends State<GamesBody> {
   late Size canvasSize;
-  List<Point> moves = [Point(0, 0)];
-  int player = 1;
-  var resultString = '';
-  var gameOver = false;
 
   @override
   Widget build(BuildContext context) {
+    final bool isPlayer1 = widget.game.player1?.id == widget.userId;
+    final bool isMoving = (widget.game.movesPlayer1 && isPlayer1) || (!widget.game.movesPlayer1 && !isPlayer1);
+
     return Center(
       child: Column(
         children: [
-          Text('Player $player $resultString'),
+          if (widget.game.gameState != GameState.running)
+            Row(
+              children: [
+                RegularButton(
+                  text: 'ready',
+                  onTap: () => context.read<GamesScreenTestCubit>().start(),
+                ),
+                RegularButton(
+                  text: 'place 1',
+                  onTap: () => context.read<GamesScreenTestCubit>().occupyPlace(1),
+                ),
+                RegularButton(
+                  text: 'place 2',
+                  onTap: () => context.read<GamesScreenTestCubit>().occupyPlace(2),
+                ),
+              ],
+            ),
+          Text(isMoving ? 'Your turn!' : 'not your turn'),
+          const SizedBox(height: 10.0),
+          Text('Game state: ${widget.game.gameState}'),
+          const SizedBox(height: 10.0),
           Expanded(
             child: Container(
               color: Colors.green,
@@ -33,17 +65,18 @@ class _GamesBodyState extends State<GamesBody> {
                     LayoutBuilder(
                       builder: (context, constraints) {
                         canvasSize = constraints.biggest;
+
                         return SizedBox(
                           width: constraints.maxWidth,
                           height: constraints.maxHeight,
                           child: GestureDetector(
                             child: CustomPaint(
                               painter: BoardBackground(color: Colors.white),
-                              foregroundPainter:
-                                  BoardForeground(moves: moves.toList()),
+                              foregroundPainter: BoardForeground(
+                                moves: widget.game.movesAsPoints,
+                              ),
                             ),
-                            onTapDown: (details) =>
-                                setState(() => addMove(details)),
+                            onTapDown: (details) => addMove(details),
                           ),
                         );
                       },
@@ -59,70 +92,24 @@ class _GamesBodyState extends State<GamesBody> {
   }
 
   void addMove(TapDownDetails tapPoint) {
-    if (gameOver) {
-      gameOver = false;
-      moves = [Point(0, 0)];
-      resultString = '';
-    }
+    final BoardSpecs specs = BoardSpecs(size: canvasSize);
+    final int x = ((tapPoint.localPosition.dx - specs.horOffset) / specs.grid).floor();
+    final int y = ((tapPoint.localPosition.dy - specs.vertOffset) / specs.grid).floor();
+    final Point<int> point = specs.shiftToCenter(Point<int>(x, y));
 
-    final specs = BoardSpecs(size: canvasSize);
-    final x = (tapPoint.localPosition.dx / specs.grid).floor();
-    final y = (tapPoint.localPosition.dy / specs.grid).floor();
-    final point = specs.shiftToCenter(Point(x, y));
+    print('=========== SHIFTING =========');
+    print('tap x: ${tapPoint.localPosition.dx}, tap y: ${tapPoint.localPosition.dy}');
+    print('grid: ${specs.grid}, width: ${specs.width}, height: ${specs.height}');
+    print('produced x: $x, produced: $y');
+    print('=========== =========');
 
-    if (!isValidMove(point)) {
-      print('Invalid');
+    if (!widget.game.canPerformMove(point)) {
+      Fluttertoast.showToast(
+        msg: 'Invalid move',
+      );
       return;
     }
-    print('Valid');
 
-    moves.add(point);
-    print(moves);
-
-    final gameResult = specs.isGameOver(moves.last);
-    if (gameResult != 0) {
-      player = gameResult;
-      resultString = 'won';
-      gameOver = true;
-    }
-    if (shouldEndTurn(specs)){
-      nextPlayer();
-    }
-  }
-
-  // Returns true if the new move is valid
-  bool isValidMove(Point move) {
-    if (moves.isEmpty) return true;
-    if (move == moves.last) return false;
-
-    final validDistance = (move.x - moves.last.x).abs() <= 1 &&
-        (move.y - moves.last.y).abs() <= 1;
-    if (!validDistance) return false;
-
-    // Check if we have covered this exact line
-    for (var i = 0; i < moves.length - 1; i++) {
-      final duplicateLine = (move == moves[i] && moves.last == moves[i + 1]) ||
-          (move == moves[i + 1] && moves.last == moves[i]);
-      if (duplicateLine) return false;
-    }
-    return true;
-  }
-
-  bool shouldEndTurn(BoardSpecs specs){
-    // Can the ball bounce off drawn lines
-    if (moves.sublist(0, moves.length-1).contains(moves.last)) {
-      return false;
-    }
-    return !specs.isOnBorder(moves.last);
-  }
-
-  void nextPlayer() {
-    setState(() {
-      if (player == 1) {
-        player = 2;
-      } else {
-        player = 1;
-      }
-    });
+    context.read<GamesScreenTestCubit>().move(point.x, point.y);
   }
 }

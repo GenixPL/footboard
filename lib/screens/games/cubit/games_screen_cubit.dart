@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:footboard/models/game/game.dart';
 import 'package:footboard/repositories/game_repository.dart';
-import 'package:footboard/screens/game/game_screen.dart';
+import 'package:footboard/screens/gamestest/games_screen.dart';
 import 'package:footboard/utils/path/pather.dart';
 import 'package:footboard/utils/service_locator.dart';
 
@@ -23,7 +23,7 @@ class GamesScreenCubit extends Cubit<GamesScreenState> {
   }
 
   Future<void> connectToGame(String gameId) async {
-    _pather.push(GameScreen.route(gameId));
+    _pather.push(GamesScreenTest.route(gameId: gameId));
   }
 
   Future<void> createNewGame() async {
@@ -42,6 +42,6 @@ class GamesScreenCubit extends Cubit<GamesScreenState> {
       games: games,
     ));
 
-    _pather.push(GameScreen.route(newGame.id));
+    _pather.push(GamesScreenTest.route(gameId: newGame.id));
   }
 }

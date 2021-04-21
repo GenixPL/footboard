@@ -2,6 +2,7 @@ import 'package:footboard/data_providers/game_data_provider.dart';
 import 'package:footboard/repositories/game_repository.dart';
 import 'package:footboard/screens/game/cubit/game_screen_cubit.dart';
 import 'package:footboard/screens/games/cubit/games_screen_cubit.dart';
+import 'package:footboard/screens/gamestest/cubit/games_screen_cubit.dart';
 import 'package:footboard/screens/home/cubit/cubit.dart';
 import 'package:footboard/utils/path/path_builder.dart';
 import 'package:footboard/utils/path/pather.dart';
@@ -27,5 +28,6 @@ void setupSl() {
   sl.registerFactory(() => HomeScreenCubit());
   sl.registerFactory(() => GameScreenCubit());
   sl.registerFactory(() => GamesScreenCubit());
+  sl.registerFactory(() => GamesScreenTestCubit());
   // endregion
 }

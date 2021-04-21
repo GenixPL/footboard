@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:footboard/screens/games/games_screen.dart';
+import 'package:footboard/screens/gamestest/games_screen.dart';
 import 'package:footboard/utils/path/pather.dart';
 import 'package:footboard/utils/service_locator.dart';
 import 'package:footboard/widgets/regular_button/regular_button.dart';
@@ -25,8 +26,12 @@ class HomeBody extends StatelessWidget {
           const SizedBox(height: 20.0),
           RegularButton(
             text: 'GAMES',
-            onTap: () => sl<Pather>().push(GamesScreen.route()),
+            onTap: () => sl<Pather>().push(GamesScreenTest.route()),
           ),
+          // RegularButton(
+          //   text: 'GAMES',
+          //   onTap: () => sl<Pather>().push(GamesScreen.route()),
+          // ),
         ],
       ),
     );
